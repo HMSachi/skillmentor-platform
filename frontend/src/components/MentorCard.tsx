@@ -6,7 +6,6 @@ import {
   Calendar,
   GraduationCap,
   ShieldCheck,
-  ThumbsUp,
 } from "lucide-react";
 import type { Mentor } from "@/types";
 import { SchedulingModal } from "@/components/SchedulingModel";
