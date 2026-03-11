@@ -45,7 +45,7 @@ export default function PaymentPage() {
     setIsUploading(true);
 
     try {
-      const token = await getToken({ template: "skillmentor-auth" });
+      const token = await getToken();
       if (!token) throw new Error("Not authenticated");
 
       await enrollInSession(token, {

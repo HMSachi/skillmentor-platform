@@ -15,10 +15,10 @@ export default function DashboardPage() {
   useEffect(() => {
     async function fetchEnrollments() {
       if (!user) return;
-      const token = await getToken({ template: "skillmentor-auth" });
+      const token = await getToken();
       if (!token) return;
       try {
-        console.log("Fetching enrollments with token:", token);
+        console.log("Fetching enrollments with default token");
         const data = await getMyEnrollments(token);
         setEnrollments(data);
       } catch (err) {

@@ -7,6 +7,7 @@ import com.stemlink.skillmentor.repositories.MentorRepository;
 import com.stemlink.skillmentor.repositories.SessionRepository;
 import com.stemlink.skillmentor.repositories.SubjectRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -24,16 +25,21 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("Checking database for mentors...");
-        if (mentorRepository.count() < 3) {
-            log.info("Database is empty or incomplete. Starting data seeding...");
+        log.info("Checking database for mentors and subjects...");
+        long mentorCount = mentorRepository.count();
+        long subjectCount = subjectRepository.count();
+        
+        if (mentorCount < 3 || subjectCount < 3) {
+            log.info("Database incomplete (Mentors: {}, Subjects: {}). Re-seeding data...", mentorCount, subjectCount);
+            // Clear existing data to avoid duplicates/errors
             sessionRepository.deleteAll();
             subjectRepository.deleteAll();
             mentorRepository.deleteAll();
+            
             seedData();
             log.info("Data seeding completed successfully!");
         } else {
-            log.info("Database already contains {} mentors. Skipping seeding.", mentorRepository.count());
+            log.info("Database already contains {} mentors and {} subjects. Skipping seeding.", mentorCount, subjectCount);
         }
     }
 

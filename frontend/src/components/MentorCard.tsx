@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import {
   Building2,
   Calendar,
@@ -27,10 +26,9 @@ export function MentorCard({ mentor }: MentorCardProps) {
 
   const mentorName = `${mentor.firstName} ${mentor.lastName}`;
   const hasSubjects = mentor.subjects.length > 0;
-  const courseTitle = mentor.subjects[0]?.subjectName ?? "";
-  const courseImageUrl = mentor.subjects[0]?.courseImageUrl ?? "";
+  const courseTitle = mentor.subjects[0]?.subjectName ?? "General Mentorship";
   const bio = mentor.bio ?? "";
-  const bioTooLong = bio.length > 200;
+  const bioTooLong = bio.length > 120;
 
   const handleSchedule = () => {
     if (!isSignedIn) {
@@ -42,114 +40,94 @@ export function MentorCard({ mentor }: MentorCardProps) {
 
   return (
     <>
-      <Card className="flex flex-col h-full">
-        <div className="p-6 flex-1 flex flex-col">
-          <div className="flex justify-between items-start mb-4">
-            <div className="space-y-2">
-              <h3 className="font-semibold text-xl">{courseTitle}</h3>
-              <div className="flex items-center space-x-2">
-                <ThumbsUp className="size-6" />
-                <p className="text-sm text-muted-foreground">
-                  {mentor.positiveReviews}% positive reviews
-                </p>
-              </div>
-              <div className="flex items-center space-x-2">
-                {mentor.profileImageUrl ? (
-                  <img
-                    src={mentor.profileImageUrl}
-                    alt={mentorName}
-                    className="size-6 object-cover object-top rounded-full"
-                  />
-                ) : (
-                  <div className="size-6 rounded-full bg-muted flex items-center justify-center text-xs font-bold">
-                    {mentor.firstName.charAt(0)}
-                  </div>
-                )}
-                <span className="text-sm">{mentorName}</span>
-              </div>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Building2 className="size-6" />
-                <span>{mentor.company}</span>
-              </div>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Calendar className="size-6" />
-                <span>Tutor since {mentor.startYear}</span>
-              </div>
-            </div>
-            <div className="w-36">
-              {courseImageUrl ? (
-                <img
-                  src={courseImageUrl}
-                  alt={courseTitle}
-                  className="size-20 object-cover"
-                />
-              ) : (
-                <div className="size-20 bg-muted flex items-center justify-center">
-                  <span className="text-2xl font-semibold">
-                    {courseTitle.charAt(0)}
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
+      <div className="rounded-3xl p-8 relative overflow-hidden bg-white dark:bg-zinc-900 border border-border shadow-lg min-h-[360px] flex flex-col justify-between group transition-all hover:border-black dark:hover:border-white">
 
-          <div className="mb-4 grow">
-            <div>
-              <p
-                className={cn(
-                  "text-sm transition-all duration-300 ease-in-out",
-                  !isExpanded && bioTooLong ? "line-clamp-3" : "",
-                )}
-              >
-                {bio}
-              </p>
-              {bioTooLong && (
-                <button
-                  onClick={() => setIsExpanded(!isExpanded)}
-                  className="text-primary text-sm font-medium mt-1 hover:underline"
-                >
-                  {isExpanded ? "See less" : "See more"}
-                </button>
-              )}
-            </div>
-          </div>
-
-          <div className="mt-auto">
-            <h4 className="font-medium mb-2">Highlights</h4>
-            <div className="bg-linear-to-br from-blue-100 to-blue-200 p-3 rounded-md flex flex-col gap-4">
-              <div className="flex items-center space-x-2">
-                <GraduationCap className="w-4 h-4" />
-                <span className="text-sm">
-                  {mentor.totalEnrollments} Enrollments
-                </span>
-              </div>
-
-              {mentor.isCertified && (
-                <div className="flex items-center space-x-2">
-                  <ShieldCheck className="w-4 h-4" />
-                  <span className="text-sm">Certified Teacher</span>
-                </div>
-              )}
-            </div>
+        {/* Status Pill matching the dashboard */}
+        <div className="absolute top-6 right-6">
+          <div className="bg-blue-100 text-blue-700 font-semibold px-4 py-1.5 rounded-full text-sm">
+            ⭐ {mentor.positiveReviews}% Rating
           </div>
         </div>
 
-        <div className="p-6 pt-0">
+        <div className="space-y-6">
+          {/* Profile Image */}
+          <div className="size-24 rounded-full ring-4 ring-black/5 dark:ring-white/10 overflow-hidden bg-muted">
+            {mentor.profileImageUrl ? (
+              <img
+                src={mentor.profileImageUrl}
+                alt={mentorName}
+                className="w-full h-full object-cover object-top"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-3xl font-bold bg-muted text-muted-foreground">
+                {mentor.firstName.charAt(0)}
+              </div>
+            )}
+          </div>
+
+          {/* Course Info */}
+          <div className="space-y-3">
+            <h2 className="text-2xl font-bold leading-tight">
+              {courseTitle}
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              Mentor: {mentorName}
+            </p>
+          </div>
+
+          <div className="text-muted-foreground text-sm flex gap-4 flex-wrap">
+            <div className="flex items-center space-x-1">
+              <Building2 className="size-4" />
+              <span>{mentor.company}</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <Calendar className="size-4" />
+              <span>Tutor since {mentor.startYear}</span>
+            </div>
+          </div>
+
+          {/* Highlights */}
+          <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl flex flex-col gap-3">
+            <div className="flex items-center space-x-3">
+              <GraduationCap className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <span className="text-sm font-medium">{mentor.totalEnrollments} Enrollments</span>
+            </div>
+            {mentor.isCertified && (
+              <div className="flex items-center space-x-3">
+                <ShieldCheck className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <span className="text-sm font-medium">Certified Teacher</span>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <p className={cn("text-sm text-foreground/80 transition-all", !isExpanded && bioTooLong ? "line-clamp-2" : "")}>
+              {bio}
+            </p>
+            {bioTooLong && (
+              <button onClick={() => setIsExpanded(!isExpanded)} className="text-blue-600 dark:text-blue-400 text-sm font-semibold mt-1 hover:underline">
+                {isExpanded ? "See less" : "See more"}
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="flex gap-3 text-md mt-6 pt-6 border-t border-border">
           <Button
             onClick={handleSchedule}
-            className="w-full bg-black text-white hover:bg-black/90 mb-2"
+            className="flex-1 bg-blue-600 text-white hover:bg-blue-700 shadow-md"
             disabled={!hasSubjects}
             title={!hasSubjects ? "No courses available for this mentor yet" : undefined}
           >
-            {hasSubjects ? "Schedule a session" : "No courses available"}
+            {hasSubjects ? "Schedule" : "Unavailable"}
           </Button>
-          <Link to={`/mentor/${mentor.id}`} className="block">
-            <Button variant="outline" className="w-full border-black hover:bg-black/5">
+          <Link to={`/mentor/${mentor.id}`} className="flex-1">
+            <Button variant="outline" className="w-full bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700/50 shadow-xs">
               View Profile
             </Button>
           </Link>
         </div>
-      </Card>
+      </div>
 
       <SignupDialog
         isOpen={isSignupDialogOpen}

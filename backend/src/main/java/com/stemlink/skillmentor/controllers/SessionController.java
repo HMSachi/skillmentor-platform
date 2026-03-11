@@ -21,15 +21,15 @@ public class SessionController {
 
     @PostMapping("/enroll")
     public ResponseEntity<SessionResponseDTO> enroll(
-            @AuthenticationPrincipal Jwt jwt,
+            java.security.Principal principal,
             @Valid @RequestBody EnrollmentRequestDTO request) {
-        String studentId = jwt.getSubject();
+        String studentId = principal.getName();
         return ResponseEntity.ok(sessionService.enroll(studentId, request));
     }
 
     @GetMapping("/my-sessions")
-    public ResponseEntity<List<SessionResponseDTO>> getMySessions(@AuthenticationPrincipal Jwt jwt) {
-        String studentId = jwt.getSubject();
+    public ResponseEntity<List<SessionResponseDTO>> getMySessions(java.security.Principal principal) {
+        String studentId = principal.getName();
         return ResponseEntity.ok(sessionService.getStudentSessions(studentId));
     }
 }

@@ -6,6 +6,7 @@ import com.stemlink.skillmentor.entities.Mentor;
 import com.stemlink.skillmentor.services.MentorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
