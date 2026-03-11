@@ -134,6 +134,17 @@ The application automatically seeds sample data on the first startup if the data
 
 ---
 
+## 🛠️ Troubleshooting
+
+### "No mentors available yet" on Home Page
+If you see this message, it's usually because the backend hasn't seeded the data. Please check:
+1.  **Backend Console**: Look for `Checking database for mentors...` and `Data seeding completed successfully!`.
+2.  **Database Connection**: Ensure the `SPRING_DATASOURCE_URL` in your `.env` or Environment Variables is correct.
+3.  **Port Conflict**: Ensure the backend is running on port `8081` (or your configured port) and the frontend variable `VITE_API_BASE_URL` matches it.
+4.  **Restart**: If you just added the Supabase URL, you **must restart** the backend server to trigger the seeder.
+
+---
+
 ## 📂 Project Structure
 
 ```text

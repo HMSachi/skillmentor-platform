@@ -26,7 +26,7 @@ public class Mentor {
     private String firstName;
 
     @Column(name = "mentor_id", length = 50, nullable = false)
-    private String MentorId;
+    private String mentorId;
 
     @Column(name = "last_name", length = 50, nullable = false)
     private String lastName;

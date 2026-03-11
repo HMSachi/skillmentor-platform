@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(path = "/api/v1/mentors")
 @RequiredArgsConstructor
@@ -26,15 +27,14 @@ public class MentorController extends AbstractController{
     private final ModelMapper modelMapper;
 
     @GetMapping
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Page<Mentor>> getAllMentors(Pageable pageable) {
-
+        log.info("Fetching all mentors for page {}", pageable.getPageNumber());
         Page<Mentor> mentors= mentorService.getAllMentors(pageable);
+        log.info("Found {} mentors", mentors.getTotalElements());
         return sendOkResponse(mentors);
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Mentor> getMentorById(@PathVariable Long id) {
 
         Mentor mentor =  mentorService.getMentorById(id);

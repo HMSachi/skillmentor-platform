@@ -13,8 +13,13 @@ export default function HomePage() {
 
   useEffect(() => {
     getPublicMentors()
-      .then((data) => setMentors(data.content))
-      .catch(console.error)
+      .then((data) => {
+        console.log("Mentors API data:", data);
+        setMentors(data.content || []);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch mentors:", err);
+      })
       .finally(() => setLoading(false));
   }, []);
 
