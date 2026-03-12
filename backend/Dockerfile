@@ -1,14 +1,23 @@
-FROM maven:3.9.6-eclipse-temurin-21
+# Build stage: Use Maven to build the application
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Copy the entire project
-COPY . .
+# Copy pom.xml and source code
+COPY pom.xml .
+COPY src ./src
 
-# Build the application
-RUN mvn package -DskipTests
+# Build the application, skipping tests for speed
+RUN mvn clean package -DskipTests
 
-# Expose the port Render injects via the PORT env var
-EXPOSE ${PORT:-8081}
+# Run stage: Use a lightweight JRE to run the app
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
 
-# Run the application directly from the target folder
-ENTRYPOINT ["java", "-jar", "target/skillmentor-0.0.1-SNAPSHOT.jar"]
+# Copy the built JAR from the build stage
+COPY --from=build /app/target/skillmentor-0.0.1-SNAPSHOT.jar app.jar
+
+# Expose the port Render uses
+EXPOSE 8081
+
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
