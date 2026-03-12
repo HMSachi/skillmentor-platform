@@ -64,15 +64,20 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         
-        // Split the allowed origins into a list
+        // Use allowedOriginPatterns for better compatibility and trim whitespace
         if (allowedOrigins != null && !allowedOrigins.isEmpty()) {
-            config.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
+            List<String> origins = Arrays.stream(allowedOrigins.split(","))
+                    .map(String::trim)
+                    .map(s -> s.endsWith("/") ? s.substring(0, s.length() - 1) : s)
+                    .toList();
+            config.setAllowedOriginPatterns(origins);
         } else {
             config.setAllowedOriginPatterns(List.of("*"));
         }
         
-        config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With"));
+        config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
+        config.setMaxAge(3600L); // Cache preflight for 1 hour
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
