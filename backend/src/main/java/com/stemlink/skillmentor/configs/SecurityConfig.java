@@ -62,17 +62,17 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
+        config.setAllowCredentials(false); // Must be false if allowing all origins ("*")
         
-        // Use allowedOriginPatterns for better compatibility and trim whitespace
-        if (allowedOrigins != null && !allowedOrigins.isEmpty()) {
+        if (allowedOrigins != null && !allowedOrigins.equals("*") && !allowedOrigins.isEmpty()) {
+            config.setAllowCredentials(true);
             List<String> origins = Arrays.stream(allowedOrigins.split(","))
                     .map(String::trim)
                     .map(s -> s.endsWith("/") ? s.substring(0, s.length() - 1) : s)
                     .toList();
             config.setAllowedOriginPatterns(origins);
         } else {
-            config.setAllowedOriginPatterns(List.of("*"));
+            config.setAllowedOrigins(List.of("*"));
         }
         
         config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
