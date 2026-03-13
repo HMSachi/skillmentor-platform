@@ -33,7 +33,7 @@ public class SecurityConfig {
     private final AuthenticationFilter clerkAuthenticationFilter;
     private final SkillMentorAuthenticationEntryPoint skillMentorAuthenticationEntryPoint;
 
-    @Value("${cors.allowed-origins:http://localhost:5173}")
+    @Value("${cors.allowed-origins:*}")
     private String allowedOrigins;
 
     @Bean
