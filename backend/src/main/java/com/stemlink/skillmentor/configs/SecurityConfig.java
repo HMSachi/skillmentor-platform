@@ -21,6 +21,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import org.springframework.http.HttpMethod;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,6 +48,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(skillMentorAuthenticationEntryPoint)
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/api/v1/subjects/**").permitAll()
                         .requestMatchers("/api/v1/mentors/**").permitAll()
@@ -62,17 +65,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(false); // Must be false if allowing all origins ("*")
-        
-        if (allowedOrigins != null && !allowedOrigins.equals("*") && !allowedOrigins.isEmpty()) {
-            config.setAllowCredentials(true);
-            List<String> origins = Arrays.stream(allowedOrigins.split(","))
-                    .map(String::trim)
-                    .map(s -> s.endsWith("/") ? s.substring(0, s.length() - 1) : s)
-                    .toList();
-            config.setAllowedOriginPatterns(origins);
+        config.setAllowCredentials(true);
+        if (allowedOrigins != null && !allowedOrigins.equals("*")) {
+            config.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
         } else {
-            config.setAllowedOrigins(List.of("*"));
+            config.setAllowedOriginPatterns(List.of("*"));
         }
         
         config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
