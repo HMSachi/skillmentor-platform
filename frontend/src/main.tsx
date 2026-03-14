@@ -3,6 +3,10 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import { ClerkProvider } from "@clerk/clerk-react";
+import { wakeUpBackend } from "./lib/api.ts";
+
+// Start waking up the backend immediately
+wakeUpBackend();
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 if (!PUBLISHABLE_KEY) {
