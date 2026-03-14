@@ -140,11 +140,48 @@ export async function getMyEnrollments(token: string): Promise<Enrollment[]> {
 
 // Mentors
 export async function getMentorById(id: number, token?: string): Promise<Mentor> {
-  if (token) {
-    const res = await fetchWithAuth(`/api/v1/mentors/${id}`, token);
-    return res.json();
+  const cacheKey = `mentor-cache-${id}`;
+
+  // Try to get from cache first
+  const cachedData = localStorage.getItem(cacheKey);
+  let parsedCache = null;
+  if (cachedData) {
+    try {
+      parsedCache = JSON.parse(cachedData);
+    } catch (e) {
+      console.error("Failed to parse mentor cache", e);
+    }
   }
-  const res = await fetch(`${API_BASE_URL}/api/v1/mentors/${id}`);
-  if (!res.ok) throw new Error("Failed to fetch mentor details");
-  return res.json();
+
+  // Network fetch in background
+  const networkFetch = (async () => {
+    try {
+      let res;
+      if (token) {
+        res = await fetchWithAuth(`/api/v1/mentors/${id}`, token);
+      } else {
+        res = await fetchWithRetry(`${API_BASE_URL}/api/v1/mentors/${id}`);
+      }
+
+      if (!res.ok) throw new Error("Failed to fetch mentor details");
+      const data = await res.json();
+      
+      // Update cache
+      localStorage.setItem(cacheKey, JSON.stringify(data));
+      return data;
+    } catch (error) {
+      if (parsedCache) {
+        console.warn("Fetch failed, using cached data", error);
+        return parsedCache;
+      }
+      throw error;
+    }
+  })();
+
+  // If we have cached data, return it immediately for instant UI
+  if (parsedCache) {
+    return parsedCache;
+  }
+
+  return networkFetch;
 }
