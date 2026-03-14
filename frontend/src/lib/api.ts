@@ -14,7 +14,7 @@ async function fetchWithRetry(
       const response = await fetch(url, {
         ...options,
         // Add a timeout signal to each attempt
-        signal: AbortSignal.timeout(10000), // 10s timeout
+        signal: AbortSignal.timeout(30000), // 30s timeout (Render cold starts)
       });
       if (response.ok) return response;
       
