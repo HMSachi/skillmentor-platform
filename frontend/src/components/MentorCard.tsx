@@ -24,8 +24,8 @@ export function MentorCard({ mentor }: MentorCardProps) {
   const { isSignedIn } = useAuth();
 
   const mentorName = `${mentor.firstName} ${mentor.lastName}`;
-  const hasSubjects = mentor.subjects.length > 0;
-  const courseTitle = mentor.subjects[0]?.subjectName ?? "General Mentorship";
+  const hasSubjects = (mentor.subjects?.length ?? 0) > 0;
+  const courseTitle = mentor.subjects?.[0]?.subjectName ?? "General Mentorship";
   const bio = mentor.bio ?? "";
   const bioTooLong = bio.length > 120;
 
@@ -44,7 +44,7 @@ export function MentorCard({ mentor }: MentorCardProps) {
         {/* Status Pill matching the dashboard */}
         <div className="absolute top-6 right-6">
           <div className="bg-blue-100 text-blue-700 font-semibold px-4 py-1.5 rounded-full text-sm">
-            ⭐ {mentor.positiveReviews}% Rating
+            ⭐ {mentor.positiveReviews} Positive
           </div>
         </div>
 
@@ -75,14 +75,18 @@ export function MentorCard({ mentor }: MentorCardProps) {
           </div>
 
           <div className="text-muted-foreground text-sm flex gap-4 flex-wrap">
-            <div className="flex items-center space-x-1">
-              <Building2 className="size-4" />
-              <span>{mentor.company}</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <Calendar className="size-4" />
-              <span>Tutor since {mentor.startYear}</span>
-            </div>
+            {mentor.company && (
+                <div className="flex items-center space-x-1">
+                    <Building2 className="size-4" />
+                    <span>{mentor.company}</span>
+                </div>
+            )}
+            {mentor.startYear && (
+                <div className="flex items-center space-x-1">
+                    <Calendar className="size-4" />
+                    <span>Tutor since {mentor.startYear}</span>
+                </div>
+            )}
           </div>
 
           {/* Highlights */}
@@ -136,7 +140,7 @@ export function MentorCard({ mentor }: MentorCardProps) {
       <SchedulingModal
         isOpen={isSchedulingModalOpen}
         onClose={() => setIsSchedulingModalOpen(false)}
-        mentor={mentor}
+        mentor={mentor as any}
       />
     </>
   );

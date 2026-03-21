@@ -20,6 +20,7 @@ export interface Mentor {
   positiveReviews: number;
   totalEnrollments: number;
   isCertified: boolean;
+  startYear: string;
   subjects: Subject[];
 }
 
