@@ -32,4 +32,14 @@ public class SessionController {
         String studentId = principal.getName();
         return ResponseEntity.ok(sessionService.getStudentSessions(studentId));
     }
+
+    @PatchMapping("/{id}/payment-proof")
+    public ResponseEntity<SessionResponseDTO> uploadPaymentProof(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> payload) {
+        String proofUrl = payload.get("paymentProofUrl");
+        // In a real app, we'd handle file upload here.
+        // For now, we'll just update the session with the provided URL.
+        return ResponseEntity.ok(sessionService.updatePaymentProof(id, proofUrl));
+    }
 }

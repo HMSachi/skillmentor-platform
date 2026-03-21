@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/components/hooks/use-toast";
 import { useAuth } from "@clerk/clerk-react";
-import { enrollInSession } from "@/lib/api";
+import { enrollInSession, uploadPaymentProof } from "@/lib/api";
 
 export default function PaymentPage() {
   const navigate = useNavigate();
@@ -28,6 +28,7 @@ export default function PaymentPage() {
   const mentorId = searchParams.get("mentorId");
   const mentorName = searchParams.get("mentorName");
   const subjectId = searchParams.get("subjectId");
+  const duration = searchParams.get("duration") || "60";
   const sessionDate = date ? new Date(date).toLocaleDateString() : null;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -40,7 +41,7 @@ export default function PaymentPage() {
     e: React.FormEvent<HTMLFormElement>,
   ): Promise<void> => {
     e.preventDefault();
-    if (!file || !date || !mentorId || !subjectId || !sessionId) return;
+    if (!file || !sessionId) return;
 
     setIsUploading(true);
 
@@ -48,17 +49,30 @@ export default function PaymentPage() {
       const token = await getToken();
       if (!token) throw new Error("Not authenticated");
 
-      await enrollInSession(token, {
-        mentorId: Number(mentorId),
-        subjectId: Number(subjectId),
-        sessionAt: date,
-        durationMinutes: 60,
-      });
+      // Mock file upload to get a URL
+      const mockStorageUrl = `https://storage.skillmentor.com/proofs/${sessionId}_${Date.now()}.png`;
+
+      // If we have mentorId, it's a NEW enrollment request
+      if (mentorId && subjectId && date) {
+        await enrollInSession(token, {
+          mentorId: Number(mentorId),
+          subjectId: Number(subjectId),
+          sessionAt: date,
+          durationMinutes: Number(duration),
+        });
+        
+        // After enrollment, the session ID in path might be temporary
+        // In a real app, enrollInSession returns the real session ID
+        // For this demo, we'll just proceed
+      } else {
+        // Otherwise, it's an update to an EXISTING session
+        await uploadPaymentProof(token, Number(sessionId), mockStorageUrl);
+      }
 
       toast({
-        title: "Payment Confirmed",
+        title: "Payment Submitted",
         description:
-          "Your bank slip has been uploaded and verified. Session scheduled successfully.",
+          "Your payment proof has been uploaded. It is now pending administrator approval.",
       });
 
       setTimeout(() => {
@@ -68,7 +82,7 @@ export default function PaymentPage() {
       toast({
         title: "Error",
         description:
-          "There was a problem scheduling your session. Please try again.",
+          "There was a problem submitting your payment. Please try again.",
         variant: "destructive",
       });
       setIsUploading(false);

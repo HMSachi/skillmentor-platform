@@ -12,4 +12,6 @@ public class EnrollmentRequestDTO {
     
     @NotNull(message = "Session time is required")
     private LocalDateTime sessionAt;
+
+    private int durationMinutes = 60;
 }

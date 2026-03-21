@@ -9,29 +9,25 @@ export interface Subject {
 // Modified to match with backend MentorResponseDTO (from GET /api/v1/mentors)
 export interface Mentor {
   id: number;
-  mentorId: string;
   firstName: string;
   lastName: string;
   email: string;
   title: string;
-  profession: string;
-  company: string;
   experienceYears: number;
   bio: string;
   profileImageUrl: string;
   positiveReviews: number;
   totalEnrollments: number;
-  isCertified: boolean;
-  startYear: string;
-  subjects: Subject[];
+  subjects?: Subject[];
 }
 
 // Modified to match with SessionResponseDTO (from GET /api/v1/sessions/my-sessions)
 export interface Enrollment {
   id: number;
+  subjectId: number;
+  subjectName: string;
   mentorName: string;
   mentorProfileImageUrl: string;
-  subjectName: string;
   sessionAt: string;
   durationMinutes: number;
   sessionStatus: string;

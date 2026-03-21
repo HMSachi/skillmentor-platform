@@ -185,3 +185,64 @@ export async function getMentorById(id: number, token?: string): Promise<Mentor>
 
   return networkFetch;
 }
+// Reviews
+export async function leaveReview(
+  token: string,
+  data: { mentorId: number; rating: number; comment: string },
+): Promise<any> {
+  const res = await fetchWithAuth("/api/v1/reviews", token, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return res.json();
+}
+
+export async function getMentorReviews(mentorId: number): Promise<any[]> {
+  const res = await fetchWithRetry(`${API_BASE_URL}/api/v1/reviews/mentor/${mentorId}`);
+  if (!res.ok) return [];
+  return res.json();
+}
+
+// Payment Proof
+export async function uploadPaymentProof(
+  token: string,
+  sessionId: number,
+  paymentProofUrl: string,
+): Promise<Enrollment> {
+  const res = await fetchWithAuth(`/api/v1/sessions/${sessionId}/payment-proof`, token, {
+    method: "PATCH",
+    body: JSON.stringify({ paymentProofUrl }),
+  });
+  return res.json();
+}
+
+// Admin API
+export async function adminGetBookings(token: string): Promise<Enrollment[]> {
+  const res = await fetchWithAuth("/api/v1/admin/bookings", token);
+  return res.json();
+}
+
+export async function adminApprovePayment(token: string, sessionId: number): Promise<Enrollment> {
+  const res = await fetchWithAuth(`/api/v1/admin/bookings/${sessionId}/approve-payment`, token, {
+    method: "PUT",
+  });
+  return res.json();
+}
+
+export async function adminUpdateSessionStatus(
+  token: string,
+  sessionId: number,
+  status: string,
+): Promise<Enrollment> {
+  const res = await fetchWithAuth(
+    `/api/v1/admin/bookings/${sessionId}/status?status=${status}`,
+    token,
+    { method: "PUT" },
+  );
+  return res.json();
+}
+
+export async function adminGetAnalytics(token: string): Promise<any> {
+  const res = await fetchWithAuth("/api/v1/admin/analytics", token);
+  return res.json();
+}

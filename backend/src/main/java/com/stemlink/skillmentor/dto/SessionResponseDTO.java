@@ -16,5 +16,8 @@ public class SessionResponseDTO {
     private String mentorName;
     private String mentorProfileImageUrl;
     private LocalDateTime sessionAt;
+    private int durationMinutes;
+    private String status;
     private String paymentStatus;
+    private String paymentProofUrl;
 }

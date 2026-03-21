@@ -10,15 +10,18 @@ import {
     ThumbsUp,
     ArrowLeft,
 } from "lucide-react";
-import { getMentorById } from "@/lib/api";
+import { getMentorById, getMentorReviews } from "@/lib/api";
 import type { Mentor } from "@/types";
 import { SchedulingModal } from "@/components/SchedulingModel";
 import { useAuth } from "@clerk/clerk-react";
 import { SignupDialog } from "@/components/SignUpDialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Star } from "lucide-react";
 
 export default function MentorProfilePage() {
     const { id } = useParams<{ id: string }>();
     const [mentor, setMentor] = useState<Mentor | null>(null);
+    const [reviews, setReviews] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [isSchedulingModalOpen, setIsSchedulingModalOpen] = useState(false);
     const [isSignupDialogOpen, setIsSignupDialogOpen] = useState(false);
@@ -26,8 +29,14 @@ export default function MentorProfilePage() {
 
     useEffect(() => {
         if (id) {
-            getMentorById(Number(id))
-                .then(setMentor)
+            Promise.all([
+                getMentorById(Number(id)),
+                getMentorReviews(Number(id))
+            ])
+                .then(([mentorData, reviewData]) => {
+                    setMentor(mentorData);
+                    setReviews(reviewData);
+                })
                 .catch(console.error)
                 .finally(() => setLoading(false));
         }
@@ -140,6 +149,44 @@ export default function MentorProfilePage() {
                                 </Card>
                             ))}
                         </div>
+                    </section>
+                    
+                    <section className="pt-8 border-t">
+                        <h2 className="text-2xl font-bold mb-6">Student Reviews</h2>
+                        {reviews && reviews.length > 0 ? (
+                            <div className="space-y-6">
+                                {reviews.map((review, i) => (
+                                    <div key={i} className="flex gap-4 p-5 rounded-2xl bg-muted/30 border border-muted-foreground/10 transition-colors hover:bg-muted/40">
+                                        <Avatar className="size-12 ring-2 ring-white shadow-sm">
+                                            <AvatarFallback className="bg-primary text-primary-foreground font-bold">
+                                                {review.studentId?.substring(0, 2).toUpperCase() || "ST"}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div className="space-y-2 flex-1">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex gap-1">
+                                                    {[...Array(5)].map((_, i) => (
+                                                        <Star
+                                                            key={i}
+                                                            className={`size-4 ${i < review.rating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/20"}`}
+                                                        />
+                                                    ))}
+                                                </div>
+                                                <span className="text-sm text-muted-foreground font-medium">
+                                                    {new Date(review.createdAt).toLocaleDateString()}
+                                                </span>
+                                            </div>
+                                            <p className="text-muted-foreground leading-relaxed italic">"{review.comment}"</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="p-8 rounded-2xl border border-dashed text-center space-y-2">
+                                <p className="text-muted-foreground font-medium">No reviews yet.</p>
+                                <p className="text-xs text-muted-foreground/60">Be the first to share your experience!</p>
+                            </div>
+                        )}
                     </section>
                 </div>
 
