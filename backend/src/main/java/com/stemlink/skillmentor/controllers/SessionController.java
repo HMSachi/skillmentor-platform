@@ -34,13 +34,13 @@ public class SessionController {
         return ResponseEntity.ok(sessionService.getStudentSessions(studentId));
     }
 
-    @PatchMapping("/{id}/payment-proof")
+    @PostMapping("/upload-payment/{id}")
     public ResponseEntity<SessionResponseDTO> uploadPaymentProof(
             @PathVariable Long id,
-            @RequestBody Map<String, String> payload) {
-        String proofUrl = payload.get("paymentProofUrl");
-        // In a real app, we'd handle file upload here.
-        // For now, we'll just update the session with the provided URL.
+            @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+        // In this implementation, we simulate save-file and return a mock URL.
+        // A real app would use Cloudinary/S3.
+        String proofUrl = "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=2000";
         return ResponseEntity.ok(sessionService.updatePaymentProof(id, proofUrl));
     }
 }
