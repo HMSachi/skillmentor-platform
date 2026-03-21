@@ -66,11 +66,8 @@ export default function PaymentPage() {
         throw new Error("Missing session information");
       }
 
-      // Mock file upload to get a URL
-      const mockStorageUrl = `https://storage.skillmentor.com/proofs/${currentSessionId}_${Date.now()}.png`;
-
       // Upload the payment proof
-      await uploadPaymentProof(token, currentSessionId, mockStorageUrl);
+      await uploadPaymentProof(token, currentSessionId, file);
 
       toast({
         title: "Payment Submitted",

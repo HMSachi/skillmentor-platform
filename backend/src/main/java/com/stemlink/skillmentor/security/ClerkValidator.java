@@ -9,9 +9,11 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
+import com.auth0.jwk.JwkProviderBuilder;
 import java.net.URL;
 import java.security.PublicKey;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 @Slf4j
@@ -21,7 +23,10 @@ public class ClerkValidator implements TokenValidator {
 
     public ClerkValidator(@Value("${clerk.jwks.url}") String clerkJwksUrl) {
         try {
-            this.jwkProvider = new UrlJwkProvider(new URL(clerkJwksUrl));
+            this.jwkProvider = new JwkProviderBuilder(new URL(clerkJwksUrl))
+                    .cached(10, 24, TimeUnit.HOURS)
+                    .rateLimited(10, 1, TimeUnit.MINUTES)
+                    .build();
         } catch (Exception e) {
             log.error("Failed to initialize JwkProvider with URL: {}", clerkJwksUrl, e);
             throw new RuntimeException("Failed to initialize Clerk validator", e);

@@ -207,12 +207,24 @@ export async function getMentorReviews(mentorId: number): Promise<any[]> {
 export async function uploadPaymentProof(
   token: string,
   sessionId: number,
-  paymentProofUrl: string,
+  file: File,
 ): Promise<Enrollment> {
-  const res = await fetchWithAuth(`/api/v1/sessions/${sessionId}/payment-proof`, token, {
-    method: "PATCH",
-    body: JSON.stringify({ paymentProofUrl }),
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetchWithRetry(`${API_BASE_URL}/api/v1/sessions/upload-payment/${sessionId}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
   });
+
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({ message: "Upload failed" }));
+    throw new Error(error.message || `HTTP ${res.status}`);
+  }
+
   return res.json();
 }
 
