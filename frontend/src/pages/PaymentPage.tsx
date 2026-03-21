@@ -41,7 +41,7 @@ export default function PaymentPage() {
     e: React.FormEvent<HTMLFormElement>,
   ): Promise<void> => {
     e.preventDefault();
-    if (!file || !sessionId) return;
+    if (!file) return;
 
     setIsUploading(true);
 
@@ -49,25 +49,28 @@ export default function PaymentPage() {
       const token = await getToken();
       if (!token) throw new Error("Not authenticated");
 
-      // Mock file upload to get a URL
-      const mockStorageUrl = `https://storage.skillmentor.com/proofs/${sessionId}_${Date.now()}.png`;
+      let currentSessionId = sessionId ? Number(sessionId) : null;
 
       // If we have mentorId, it's a NEW enrollment request
-      if (mentorId && subjectId && date) {
-        await enrollInSession(token, {
+      if (!currentSessionId && mentorId && subjectId && date) {
+        const enrollment = await enrollInSession(token, {
           mentorId: Number(mentorId),
           subjectId: Number(subjectId),
           sessionAt: date,
           durationMinutes: Number(duration),
         });
-        
-        // After enrollment, the session ID in path might be temporary
-        // In a real app, enrollInSession returns the real session ID
-        // For this demo, we'll just proceed
-      } else {
-        // Otherwise, it's an update to an EXISTING session
-        await uploadPaymentProof(token, Number(sessionId), mockStorageUrl);
+        currentSessionId = enrollment.id;
       }
+
+      if (!currentSessionId) {
+        throw new Error("Missing session information");
+      }
+
+      // Mock file upload to get a URL
+      const mockStorageUrl = `https://storage.skillmentor.com/proofs/${currentSessionId}_${Date.now()}.png`;
+
+      // Upload the payment proof
+      await uploadPaymentProof(token, currentSessionId, mockStorageUrl);
 
       toast({
         title: "Payment Submitted",
@@ -79,12 +82,14 @@ export default function PaymentPage() {
         navigate("/dashboard");
       }, 2000);
     } catch (error) {
+      console.error("Payment error:", error);
       toast({
         title: "Error",
         description:
-          "There was a problem submitting your payment. Please try again.",
+          error instanceof Error ? error.message : "There was a problem submitting your payment. Please try again.",
         variant: "destructive",
       });
+    } finally {
       setIsUploading(false);
     }
   };

@@ -27,6 +27,9 @@ public class Session {
     @JoinColumn(name = "subject_id", nullable = false)
     private Subject subject;
 
+    @Column(name = "session_at", nullable = false)
+    private LocalDateTime sessionAt;
+
     @Column(name = "duration_minutes", nullable = false)
     private int durationMinutes = 60;
 
