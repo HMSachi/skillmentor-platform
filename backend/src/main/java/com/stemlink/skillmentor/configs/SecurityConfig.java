@@ -50,11 +50,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
-                        .requestMatchers("/api/v1/subjects/**").permitAll()
-                        .requestMatchers("/api/v1/mentors/**").permitAll()
-                        .requestMatchers("/api/v1/sessions/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/subjects/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/mentors/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs").permitAll()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(clerkAuthenticationFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(AbstractHttpConfigurer::disable);

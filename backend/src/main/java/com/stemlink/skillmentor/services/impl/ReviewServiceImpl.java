@@ -28,6 +28,11 @@ public class ReviewServiceImpl implements ReviewService {
         review.setRating(rating);
         review.setComment(comment);
 
+        if (rating >= 4) {
+            mentor.setPositiveReviews(mentor.getPositiveReviews() + 1);
+            mentorRepository.save(mentor);
+        }
+
         return reviewRepository.save(review);
     }
 
