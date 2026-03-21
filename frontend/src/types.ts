@@ -13,12 +13,14 @@ export interface Mentor {
   lastName: string;
   email: string;
   title: string;
+  company: string;
   experienceYears: number;
   bio: string;
   profileImageUrl: string;
   positiveReviews: number;
   totalEnrollments: number;
-  subjects?: Subject[];
+  isCertified: boolean;
+  subjects: Subject[];
 }
 
 // Modified to match with SessionResponseDTO (from GET /api/v1/sessions/my-sessions)
@@ -30,8 +32,8 @@ export interface Enrollment {
   mentorProfileImageUrl: string;
   sessionAt: string;
   durationMinutes: number;
-  sessionStatus: string;
-  paymentStatus: "pending" | "accepted" | "completed" | "cancelled";
+  status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "accepted" | "pending" | "completed" | "cancelled";
+  paymentStatus: string;
   meetingLink: string | null;
 }
 

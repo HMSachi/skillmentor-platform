@@ -15,7 +15,7 @@ import type { Mentor } from "@/types";
 import { SchedulingModal } from "@/components/SchedulingModel";
 import { useAuth } from "@clerk/clerk-react";
 import { SignupDialog } from "@/components/SignUpDialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
 
 export default function MentorProfilePage() {
@@ -100,7 +100,7 @@ export default function MentorProfilePage() {
                         <div className="space-y-2">
                             <h1 className="text-4xl font-bold tracking-tight">{mentorName}</h1>
                             <p className="text-xl text-muted-foreground font-medium">
-                                {mentor.title} at {mentor.company}
+                                {mentor.title} {mentor.company && `at ${mentor.company}`}
                             </p>
                             <div className="flex flex-wrap gap-4 mt-4">
                                 <div className="flex items-center gap-1 text-sm bg-blue-50 text-blue-700 px-3 py-1 rounded-full border border-blue-100">
@@ -125,7 +125,7 @@ export default function MentorProfilePage() {
                     <section>
                         <h2 className="text-2xl font-bold mb-4">Subjects Taught</h2>
                         <div className="grid gap-4 sm:grid-cols-2">
-                            {mentor.subjects.map((subject) => (
+                            {mentor.subjects?.map((subject) => (
                                 <Card key={subject.id} className="overflow-hidden p-0 border-none shadow-md hover:shadow-lg transition-shadow">
                                     <div className="aspect-video relative overflow-hidden bg-muted">
                                         {subject.courseImageUrl ? (
@@ -201,7 +201,7 @@ export default function MentorProfilePage() {
                                 </div>
                                 <span className="font-bold">{mentor.totalEnrollments}</span>
                             </div>
-                            {mentor.isCertified && (
+                            {(mentor as any).isCertified && (
                                 <div className="flex items-center justify-between py-2 border-b">
                                     <div className="flex items-center text-muted-foreground">
                                         <ShieldCheck className="mr-2 h-4 w-4" />
@@ -221,7 +221,7 @@ export default function MentorProfilePage() {
                         <Button
                             onClick={handleSchedule}
                             className="w-full py-6 text-lg font-bold bg-black text-white hover:bg-black/90 shadow-lg transition-all active:scale-[0.98]"
-                            disabled={mentor.subjects.length === 0}
+                            disabled={!mentor.subjects || mentor.subjects.length === 0}
                         >
                             Check Availability
                         </Button>

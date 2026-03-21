@@ -185,7 +185,7 @@ export default function DashboardPage() {
                     <MessageSquare className="mr-2 h-4 w-4" />
                     Share Feedback
                   </Button>
-                ) : enrollment.paymentStatus === "PENDING" ? (
+                ) : (enrollment.paymentStatus === "PENDING" || enrollment.paymentStatus === "pending") ? (
                   <Link to={`/payment/${enrollment.id}`} className="w-full">
                     <Button 
                       variant="secondary" 
@@ -201,7 +201,7 @@ export default function DashboardPage() {
                     variant="secondary" 
                     className="w-full rounded-2xl h-12 bg-white/5 text-white/40 border border-white/5 cursor-not-allowed"
                   >
-                    {enrollment.status === "PENDING" ? "Awaiting Confirmation" : enrollment.status}
+                    {(enrollment.status === "PENDING" || enrollment.status === "pending") ? "Awaiting Confirmation" : enrollment.status}
                   </Button>
                 )}
               </div>
@@ -232,7 +232,7 @@ export default function DashboardPage() {
             <Textarea
               placeholder="Tell us what you liked (or what could be better)..."
               value={comment}
-              onChange={(e) => setComment(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setComment(e.target.value)}
               className="min-h-[140px] rounded-2xl border-muted/50 focus:ring-primary focus:border-primary resize-none p-4"
             />
           </div>
