@@ -105,7 +105,7 @@ export default function MentorProfilePage() {
                             <div className="flex flex-wrap gap-4 mt-4">
                                 <div className="flex items-center gap-1 text-sm bg-blue-50 text-blue-700 px-3 py-1 rounded-full border border-blue-100">
                                     <ThumbsUp className="h-3.5 w-3.5" />
-                                    {mentor.positiveReviews}% Positive reviews
+                                    {mentor.positiveReviews} Positive reviews
                                 </div>
                                 <div className="flex items-center gap-1 text-sm bg-green-50 text-green-700 px-3 py-1 rounded-full border border-green-100">
                                     <Calendar className="h-3.5 w-3.5" />
