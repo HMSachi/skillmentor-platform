@@ -30,7 +30,7 @@ public class Session {
     @Column(name = "session_at", nullable = false)
     private LocalDateTime sessionAt;
 
-    @Column(name = "duration_minutes", nullable = false)
+    @Column(name = "duration_minutes")
     private int durationMinutes = 60;
 
     @Column(name = "payment_proof_url")
