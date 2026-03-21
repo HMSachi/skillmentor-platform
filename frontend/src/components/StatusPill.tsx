@@ -1,21 +1,23 @@
 import { cn } from "@/lib/utils";
 
 interface StatusPillProps {
-  status: "pending" | "accepted" | "completed" | "cancelled";
+  status: string;
 }
 
 export function StatusPill({ status }: StatusPillProps) {
+  const s = status?.toLowerCase() || "pending";
+  
   return (
     <span
       className={cn(
         "inline-flex items-center rounded-full px-3 py-1 text-xs font-medium",
-        status === "pending" && "bg-yellow-100 text-yellow-800",
-        status === "accepted" && "bg-green-100 text-green-800",
-        status === "completed" && "bg-blue-100 text-blue-800",
-        status === "cancelled" && "bg-red-100 text-red-800"
+        (s === "pending" || s === "pending_approval") && "bg-amber-100 text-amber-800",
+        (s === "confirmed" || s === "accepted" || s === "paid") && "bg-emerald-100 text-emerald-800",
+        s === "completed" && "bg-sky-100 text-sky-800",
+        (s === "cancelled" || s === "rejected") && "bg-rose-100 text-rose-800"
       )}
     >
-      {status.charAt(0).toUpperCase() + status.slice(1)}
+      {s.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase())}
     </span>
   );
 }
