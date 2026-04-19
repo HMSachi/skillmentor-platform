@@ -5,6 +5,7 @@ import MentorProfilePage from "@/pages/MentorProfilePage";
 import LoginPage from "@/pages/LoginPage";
 import DashboardPage from "@/pages/DashboardPage";
 import PaymentPage from "@/pages/PaymentPage";
+import AboutPage from "@/pages/AboutPage";
 import { SignedIn, SignedOut } from "@clerk/clerk-react";
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/mentor/:id" element={<MentorProfilePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route
