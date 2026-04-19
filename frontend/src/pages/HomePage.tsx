@@ -73,6 +73,18 @@ export default function HomePage() {
           </div>
         )}
       </div>
+
+      <section id="about-us" className="container mt-16 pb-8 scroll-mt-28">
+        <div className="rounded-2xl border border-border bg-white/80 p-6 sm:p-8">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3">About Us</h2>
+          <p className="text-muted-foreground text-base sm:text-lg leading-relaxed max-w-3xl">
+            SkillMentor connects learners with experienced industry mentors for
+            practical, career-focused sessions. We help you build confidence in
+            certifications, interviews, and real-world skills through guided
+            one-on-one mentorship.
+          </p>
+        </div>
+      </section>
     </div>
   );
 }

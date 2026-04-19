@@ -26,7 +26,7 @@ export function Navigation() {
         Tutors
       </Link>
       <Link
-        to="/"
+        to="/#about-us"
         className="hover:text-primary transition-colors"
         onClick={() => mobile && setIsOpen(false)}
       >
