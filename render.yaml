@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: skillmentor-backend
+    env: docker
+    rootDir: backend
+    dockercontext: .
+    dockerfilePath: Dockerfile
+    plan: free # Use free tier by default
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_DATASOURCE_URL
+        sync: false # User must provide this
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false # User must provide this
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false # User must provide this
+      - key: CLERK_JWKS_URL
+        value: https://happy-crow-68.clerk.accounts.dev/.well-known/jwks.json
+      - key: CLERK_ISSUER
+        value: https://happy-crow-68.clerk.accounts.dev
+      - key: JWT_SECRET
+        generateValue: true # Generate a random secret if not provided
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://skillmentor-platform-nwzl.vercel.app,https://*.vercel.app
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
