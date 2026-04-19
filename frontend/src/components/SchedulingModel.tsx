@@ -40,6 +40,12 @@ export function SchedulingModal({
   const navigate = useNavigate();
   const mentorName = `${mentor.firstName} ${mentor.lastName}`;
 
+  const formatLocalDateTime = (date: Date): string => {
+    const pad = (value: number): string => value.toString().padStart(2, "0");
+
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+  };
+
   const handleSchedule = () => {
     if (date && selectedTime && selectedSubjectId) {
       const sessionDateTime = new Date(date);
@@ -52,7 +58,7 @@ export function SchedulingModal({
       const subject = mentor.subjects?.find(s => s.id === selectedSubjectId);
       const sessionId = `${mentor.id}-${Date.now()}`;
       const searchParams = new URLSearchParams({
-        date: sessionDateTime.toISOString(),
+        date: formatLocalDateTime(sessionDateTime),
         courseTitle: subject?.subjectName ?? "",
         mentorName: mentorName,
         mentorId: String(mentor.id),

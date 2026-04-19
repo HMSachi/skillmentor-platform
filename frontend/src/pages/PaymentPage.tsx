@@ -30,6 +30,7 @@ export default function PaymentPage() {
   const subjectId = searchParams.get("subjectId");
   const duration = searchParams.get("duration") || "60";
   const sessionDate = date ? new Date(date).toLocaleDateString() : null;
+  const parsedSessionId = sessionId && /^\d+$/.test(sessionId) ? Number(sessionId) : null;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (e.target.files && e.target.files[0]) {
@@ -49,7 +50,7 @@ export default function PaymentPage() {
       const token = await getToken();
       if (!token) throw new Error("Not authenticated");
 
-      let currentSessionId = sessionId ? Number(sessionId) : null;
+      let currentSessionId = parsedSessionId;
 
       // If we have mentorId, it's a NEW enrollment request
       if (!currentSessionId && mentorId && subjectId && date) {
@@ -63,7 +64,7 @@ export default function PaymentPage() {
       }
 
       if (!currentSessionId) {
-        throw new Error("Missing session information");
+        throw new Error("Missing session information. Please start the booking from a mentor profile page.");
       }
 
       // Upload the payment proof

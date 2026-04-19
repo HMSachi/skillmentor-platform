@@ -66,10 +66,14 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        if (allowedOrigins != null && !allowedOrigins.equals("*")) {
-            config.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
+        if (allowedOrigins != null && !allowedOrigins.isBlank()) {
+            List<String> originPatterns = Arrays.stream(allowedOrigins.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .toList();
+            config.setAllowedOriginPatterns(originPatterns);
         } else {
-            config.setAllowedOriginPatterns(List.of("*"));
+            config.setAllowedOriginPatterns(List.of("http://localhost:*", "https://*.vercel.app"));
         }
         
         config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
