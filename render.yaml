@@ -3,7 +3,7 @@ services:
     name: skillmentor-backend
     env: docker
     rootDir: backend
-    dockercontext: .
+    dockerContext: .
     dockerfilePath: Dockerfile
     plan: free # Use free tier by default
     envVars:

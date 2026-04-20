@@ -14,17 +14,17 @@ async function fetchWithRetry(
       const response = await fetch(url, {
         ...options,
         // Add a timeout signal to each attempt
-        signal: AbortSignal.timeout(30000), // 30s timeout (Render cold starts)
+        signal: AbortSignal.timeout(60000), // 60s timeout (Render cold starts)
       });
       if (response.ok) return response;
-      
+
       // If server is starting up (502, 503, 504), wait and retry
       if (response.status >= 502 && response.status <= 504) {
         console.warn(`Server starting up (Status ${response.status}). Retrying... (${i + 1}/${retries})`);
         await new Promise((resolve) => setTimeout(resolve, delay * Math.pow(1.5, i))); // Exponential backoff
         continue;
       }
-      
+
       return response; // Return other failures immediately
     } catch (err) {
       if (i === retries - 1) throw err;
@@ -61,7 +61,7 @@ async function fetchWithAuth(
 export async function wakeUpBackend(): Promise<void> {
   try {
     // Just a head request or a simple ping to the root
-    await fetch(`${API_BASE_URL}/`, { method: "HEAD", mode: 'no-cors' }).catch(() => {});
+    await fetch(`${API_BASE_URL}/`, { method: "HEAD", mode: 'no-cors' }).catch(() => { });
   } catch (e) {
     // Ignore errors for wake-up call
   }
@@ -93,7 +93,7 @@ export async function getPublicMentors(
       );
       if (!res.ok) throw new Error("Failed to fetch mentors");
       const data = await res.json();
-      
+
       // Update cache on success
       localStorage.setItem(cacheKey, JSON.stringify(data));
       return data;
@@ -165,7 +165,7 @@ export async function getMentorById(id: number, token?: string): Promise<Mentor>
 
       if (!res.ok) throw new Error("Failed to fetch mentor details");
       const data = await res.json();
-      
+
       // Update cache
       localStorage.setItem(cacheKey, JSON.stringify(data));
       return data;
