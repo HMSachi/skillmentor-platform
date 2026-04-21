@@ -50,6 +50,16 @@ public class SkillMentorJwtValidator implements TokenValidator{
         }
     }
 
+    @Override
+    public String extractEmail(String token) {
+        try {
+            return getClaims(token).get("email", String.class);
+        } catch (Exception e) {
+            log.error("Failed to extract email from token: {}", e.getMessage());
+            return null;
+        }
+    }
+
     private Claims getClaims(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())

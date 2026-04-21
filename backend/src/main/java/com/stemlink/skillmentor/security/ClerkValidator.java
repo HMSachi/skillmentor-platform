@@ -98,6 +98,28 @@ public class ClerkValidator implements TokenValidator {
         }
     }
 
+    @Override
+    public String extractEmail(String token) {
+        try {
+            if (!validateToken(token)) {
+                return null;
+            }
+            DecodedJWT decodedJWT = decodeToken(token);
+            if (decodedJWT == null) {
+                return null;
+            }
+            // Clerk often stores primary email or raw email under "email" or "email_address"
+            String email = decodedJWT.getClaim("email").asString();
+            if (email == null) {
+                 email = decodedJWT.getClaim("primary_email_address_id").asString();
+            }
+            return email;
+        } catch (Exception e) {
+            log.error("Error extracting email: {}", e.getMessage());
+            return null;
+        }
+    }
+
 
     private DecodedJWT decodeToken(String token) {
         try {

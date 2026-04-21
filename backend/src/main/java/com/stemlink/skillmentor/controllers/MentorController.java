@@ -51,6 +51,7 @@ public class MentorController extends AbstractController{
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Mentor> updateMentor(@PathVariable Long id, @Valid @RequestBody MentorDTO updatedMentorDTO) {
         Mentor mentor = modelMapper.map(updatedMentorDTO, Mentor.class);
         Mentor updatedMentor = mentorService.updateMentorById(id, mentor);
@@ -58,6 +59,7 @@ public class MentorController extends AbstractController{
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Mentor> deleteMentor(@PathVariable Long id) {
 
         mentorService.deleteMentor(id);

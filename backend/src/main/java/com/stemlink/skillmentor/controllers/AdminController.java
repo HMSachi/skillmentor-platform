@@ -1,7 +1,9 @@
 package com.stemlink.skillmentor.controllers;
 
 import com.stemlink.skillmentor.dto.SessionResponseDTO;
+import com.stemlink.skillmentor.dto.StudentResponseDTO;
 import com.stemlink.skillmentor.services.SessionService;
+import com.stemlink.skillmentor.services.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +20,12 @@ import java.util.Map;
 public class AdminController extends AbstractController {
 
     private final SessionService sessionService;
+    private final StudentService studentService;
+
+    @GetMapping("/students")
+    public ResponseEntity<List<StudentResponseDTO>> getAllStudents() {
+        return ResponseEntity.ok(studentService.getAllStudentsWithEnrollmentCount());
+    }
 
     @GetMapping("/bookings")
     public ResponseEntity<List<SessionResponseDTO>> getAllBookings() {

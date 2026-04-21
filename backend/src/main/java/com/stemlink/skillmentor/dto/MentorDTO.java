@@ -17,6 +17,10 @@ public class MentorDTO {
     @Size(min = 2, max = 50, message = "Last name must be between 2 and 50 characters")
     private String lastName;
 
+    @NotNull(message = "Mentor ID cannot be null")
+    @Size(min = 2, max = 50, message = "Mentor ID must be between 2 and 50 characters")
+    private String mentorId;
+
     @NotNull(message = "Email cannot be null")
     @Email(message = "Email should be valid")
     private String email;

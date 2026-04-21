@@ -21,4 +21,7 @@ public class SubjectDTO {
 
     private String courseImageUrl;
 
+    @NotNull(message = "Mentor ID cannot be null")
+    private Long mentorId;
+
 }

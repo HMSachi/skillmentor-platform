@@ -8,9 +8,20 @@ import PaymentPage from "@/pages/PaymentPage";
 import AboutPage from "@/pages/AboutPage";
 import { SignedIn, SignedOut } from "@clerk/clerk-react";
 
+import UserSyncTrigger from "@/components/UserSyncTrigger";
+import AdminLayout from "@/components/admin/AdminLayout";
+import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
+import MentorManagement from "@/pages/admin/MentorManagement";
+import SubjectManagement from "@/pages/admin/SubjectManagement";
+import SessionManagement from "@/pages/admin/SessionManagement";
+import StudentManagement from "@/pages/admin/StudentManagement";
+
 function App() {
   return (
     <BrowserRouter>
+      <SignedIn>
+        <UserSyncTrigger />
+      </SignedIn>
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -43,6 +54,15 @@ function App() {
               </>
             }
           />
+          
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboardPage />} />
+            <Route path="mentors" element={<MentorManagement />} />
+            <Route path="subjects" element={<SubjectManagement />} />
+            <Route path="sessions" element={<SessionManagement />} />
+            <Route path="students" element={<StudentManagement />} />
+          </Route>
+
           <Route path="*" element={<LoginPage />} />
         </Routes>
       </Layout>

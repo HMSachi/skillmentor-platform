@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
-import { useAuth, SignInButton, UserButton } from "@clerk/clerk-react";
+import { useAuth, useUser, SignInButton, UserButton } from "@clerk/clerk-react";
 import SkillMentorLogo from "@/assets/logo.webp";
 import { Menu } from "lucide-react";
 import { useState } from "react";
@@ -9,7 +9,12 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
 export function Navigation() {
   const { isSignedIn } = useAuth();
+  const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
+
+  const adminEmails = import.meta.env.VITE_ADMIN_EMAILS?.split(",") || [];
+  const isAdmin = user?.primaryEmailAddress?.emailAddress &&
+    adminEmails.includes(user.primaryEmailAddress.emailAddress);
 
   const NavItems = ({ mobile = false }: { mobile?: boolean }) => (
     <nav
@@ -52,12 +57,12 @@ export function Navigation() {
       {isSignedIn ? (
         <>
           <Link
-            to="/dashboard"
+            to={isAdmin ? "/admin" : "/dashboard"}
             className={cn(mobile && "w-full")}
             onClick={() => mobile && setIsOpen(false)}
           >
             <Button variant="ghost" className={cn(mobile && "w-full")}>
-              Dashboard
+              {isAdmin ? "Admin" : "Dashboard"}
             </Button>
           </Link>
           <div

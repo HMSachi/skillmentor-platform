@@ -6,4 +6,5 @@ public interface TokenValidator {
     boolean validateToken(String token);
     String extractUserId(String token);
     List<String> extractRoles(String token);
+    String extractEmail(String token);
 }

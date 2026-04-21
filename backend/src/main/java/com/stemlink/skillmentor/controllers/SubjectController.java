@@ -2,6 +2,7 @@ package com.stemlink.skillmentor.controllers;
 
 import com.stemlink.skillmentor.dto.SubjectDTO;
 import com.stemlink.skillmentor.entities.Subject;
+import com.stemlink.skillmentor.services.MentorService;
 import com.stemlink.skillmentor.services.SubjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class SubjectController {
 
     private final ModelMapper modelMapper;
     private final SubjectService subjectService;
+    private final MentorService mentorService;
 
 
     @GetMapping
@@ -37,18 +39,24 @@ public class SubjectController {
     @PreAuthorize("hasRole('ADMIN')")
     public Subject createSubjects(@Valid @RequestBody SubjectDTO subjectDTO) {
         Subject subject = modelMapper.map(subjectDTO, Subject.class);
+        // Link the mentor
+        if (subjectDTO.getMentorId() != null) {
+            subject.setMentor(mentorService.getMentorById(subjectDTO.getMentorId()));
+        }
         return subjectService.addNewSubject(subject);
     }
 
 
 
     @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public String updateSubjects() {
         System.out.println("PUT");
         return "update subjects";
     }
 
     @DeleteMapping(path = "{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteSubjects(@PathVariable Long id) {
         subjectService.deleteSubject(id);
         return "Subject deleted";
