@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
-import { Users, BookOpen, Calendar, ShieldCheck } from "lucide-react";
+import { Users, Calendar, ShieldCheck } from "lucide-react";
 
 interface Analytics {
   totalBookings: number;
@@ -12,7 +12,7 @@ interface Analytics {
 export default function AdminDashboardPage() {
   const { getToken } = useAuth();
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchAnalytics() {
@@ -36,7 +36,7 @@ export default function AdminDashboardPage() {
     fetchAnalytics();
   }, [getToken]);
 
-  if (loading) {
+  if (_loading) {
     return <div className="text-slate-500">Loading analytics...</div>;
   }
 
@@ -49,7 +49,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-slate-800">Overview</h1>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {stats.map((stat) => {
           const Icon = stat.icon;
@@ -77,7 +77,7 @@ export default function AdminDashboardPage() {
             </div>
           ))}
           {Object.keys(analytics?.subjectEnrollments || {}).length === 0 && (
-             <p className="text-slate-500 text-sm">No enrollments yet.</p>
+            <p className="text-slate-500 text-sm">No enrollments yet.</p>
           )}
         </div>
       </div>

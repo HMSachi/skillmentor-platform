@@ -40,7 +40,7 @@ export default function SessionManagement() {
     }
   }
 
-  async function updatePaymentStatus(id: number, status: string) {
+  async function updatePaymentStatus(id: number, _status: string) {
     try {
       const token = await getToken();
       const apiUrl = import.meta.env.VITE_API_URL;
@@ -93,20 +93,18 @@ export default function SessionManagement() {
                 <td className="px-6 py-4 text-slate-600">{session.mentorName}</td>
                 <td className="px-6 py-4 text-slate-600">{new Date(session.sessionAt).toLocaleString()}</td>
                 <td className="px-6 py-4 text-slate-600">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    session.paymentStatus === 'PAID' ? 'bg-green-100 text-green-700' :
-                    session.paymentStatus === 'PENDING' ? 'bg-yellow-100 text-yellow-700' :
-                    'bg-slate-100 text-slate-700'
-                  }`}>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${session.paymentStatus === 'PAID' ? 'bg-green-100 text-green-700' :
+                      session.paymentStatus === 'PENDING' ? 'bg-yellow-100 text-yellow-700' :
+                        'bg-slate-100 text-slate-700'
+                    }`}>
                     {session.paymentStatus}
                   </span>
                 </td>
                 <td className="px-6 py-4 text-slate-600">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    session.status === 'COMPLETED' ? 'bg-blue-100 text-blue-700' :
-                    session.status === 'CANCELLED' ? 'bg-red-100 text-red-700' :
-                    'bg-slate-100 text-slate-700'
-                  }`}>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${session.status === 'COMPLETED' ? 'bg-blue-100 text-blue-700' :
+                      session.status === 'CANCELLED' ? 'bg-red-100 text-red-700' :
+                        'bg-slate-100 text-slate-700'
+                    }`}>
                     {session.status}
                   </span>
                 </td>

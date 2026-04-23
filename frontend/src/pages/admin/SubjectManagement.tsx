@@ -5,7 +5,7 @@ export default function SubjectManagement() {
   const { getToken } = useAuth();
   const [subjects, setSubjects] = useState<any[]>([]);
   const [mentors, setMentors] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
 
   // Form states
   const [subjectName, setSubjectName] = useState("");
