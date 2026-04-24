@@ -2,11 +2,9 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useAuth } from "@clerk/clerk-react";
 import {
-    PlayCircle,
     FileText,
     CheckCircle2,
     ChevronRight,
-    Clock,
     BookOpen,
     MessageSquare,
     Lock,
@@ -16,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import { getMyEnrollments } from "@/lib/api";
 import type { Enrollment } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 
 export default function CourseDetailsPage() {
     const { sessionId } = useParams();
