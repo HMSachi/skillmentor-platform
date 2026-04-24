@@ -4,6 +4,10 @@ import com.stemlink.skillmentor.dto.SessionResponseDTO;
 import com.stemlink.skillmentor.dto.StudentResponseDTO;
 import com.stemlink.skillmentor.services.SessionService;
 import com.stemlink.skillmentor.services.StudentService;
+import com.stemlink.skillmentor.services.MentorService;
+import com.stemlink.skillmentor.services.ResourceService;
+import com.stemlink.skillmentor.entities.Mentor;
+import com.stemlink.skillmentor.entities.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +25,8 @@ public class AdminController extends AbstractController {
 
     private final SessionService sessionService;
     private final StudentService studentService;
+    private final MentorService mentorService;
+    private final ResourceService resourceService;
 
     @GetMapping("/students")
     public ResponseEntity<List<StudentResponseDTO>> getAllStudents() {
@@ -65,5 +71,38 @@ public class AdminController extends AbstractController {
         analytics.put("subjectEnrollments", subjectEnrollments);
         
         return ResponseEntity.ok(analytics);
+    }
+
+    // Mentor Management
+    @GetMapping("/mentors/{id}")
+    public ResponseEntity<Mentor> getMentor(@PathVariable Long id) {
+        return ResponseEntity.ok(mentorService.getMentorById(id));
+    }
+
+    @PutMapping("/mentors/{id}")
+    public ResponseEntity<Mentor> updateMentor(@PathVariable Long id, @RequestBody Mentor mentor) {
+        return ResponseEntity.ok(mentorService.updateMentorById(id, mentor));
+    }
+
+    // Resource Management
+    @PostMapping("/resources")
+    public ResponseEntity<Resource> addResource(
+            @RequestParam String title,
+            @RequestParam String type,
+            @RequestParam(required = false) Long mentorId,
+            @RequestParam(required = false) Long subjectId,
+            @RequestParam org.springframework.web.multipart.MultipartFile file) {
+        return ResponseEntity.ok(resourceService.addResource(title, type, mentorId, subjectId, file));
+    }
+
+    @GetMapping("/mentors/{id}/resources")
+    public ResponseEntity<List<Resource>> getMentorResources(@PathVariable Long id) {
+        return ResponseEntity.ok(resourceService.getResourcesByMentor(id));
+    }
+
+    @DeleteMapping("/resources/{id}")
+    public ResponseEntity<Void> deleteResource(@PathVariable Long id) {
+        resourceService.deleteResource(id);
+        return ResponseEntity.ok().build();
     }
 }

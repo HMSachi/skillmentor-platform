@@ -55,7 +55,7 @@ export default function DashboardPage() {
     try {
       // For this demo, we'll try to find mentor ID from enrollment if possible
       // In SessionResponseDTO we should have mentorId
-      const mentorId = (selectedEnrollment as any).mentorId || 1; 
+      const mentorId = (selectedEnrollment as any).mentorId || 1;
 
       await leaveReview(token, {
         mentorId: mentorId,
@@ -118,7 +118,7 @@ export default function DashboardPage() {
           >
             {/* Glossy Overlay */}
             <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-            
+
             {/* Status Pill */}
             <div className="absolute top-6 right-6 z-10">
               <StatusPill status={enrollment.paymentStatus || enrollment.status} />
@@ -141,9 +141,9 @@ export default function DashboardPage() {
                   )}
                 </div>
                 {enrollment.status === "COMPLETED" && (
-                    <div className="absolute -bottom-2 -right-2 bg-green-500 text-white p-1.5 rounded-xl shadow-lg border-2 border-indigo-600">
-                        <Star className="size-4 fill-white" />
-                    </div>
+                  <div className="absolute -bottom-2 -right-2 bg-green-500 text-white p-1.5 rounded-xl shadow-lg border-2 border-indigo-600">
+                    <Star className="size-4 fill-white" />
+                  </div>
                 )}
               </div>
 
@@ -153,18 +153,18 @@ export default function DashboardPage() {
                   {enrollment.subjectName}
                 </h2>
                 <div className="flex flex-col gap-2">
-                    <p className="text-white/70 text-sm font-medium uppercase tracking-wider">
-                      with {enrollment.mentorName}
-                    </p>
-                    <div className="flex items-center gap-3">
-                        <div className="flex items-center text-white/90 text-xs bg-white/10 px-2 py-1 rounded-lg">
-                            <Clock className="mr-1.5 h-3.5 w-3.5" />
-                            {enrollment.durationMinutes} min
-                        </div>
-                        <div className="flex items-center text-white/90 text-xs bg-white/10 px-2 py-1 rounded-lg font-mono">
-                            {enrollment.status}
-                        </div>
+                  <p className="text-white/70 text-sm font-medium uppercase tracking-wider">
+                    with {enrollment.mentorName}
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center text-white/90 text-xs bg-white/10 px-2 py-1 rounded-lg">
+                      <Clock className="mr-1.5 h-3.5 w-3.5" />
+                      {enrollment.durationMinutes} min
                     </div>
+                    <div className="flex items-center text-white/90 text-xs bg-white/10 px-2 py-1 rounded-lg font-mono">
+                      {enrollment.status}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -177,8 +177,8 @@ export default function DashboardPage() {
 
               <div className="grid grid-cols-1 gap-3">
                 {enrollment.status === "COMPLETED" ? (
-                  <Button 
-                    variant="secondary" 
+                  <Button
+                    variant="secondary"
                     className="w-full rounded-2xl h-12 bg-white/10 hover:bg-white/20 text-white border border-white/10 backdrop-blur-sm transition-all shadow-lg"
                     onClick={() => handleLeaveReview(enrollment)}
                   >
@@ -187,21 +187,31 @@ export default function DashboardPage() {
                   </Button>
                 ) : (enrollment.paymentStatus === "PENDING" || enrollment.paymentStatus === "pending") ? (
                   <Link to={`/payment/${enrollment.id}`} className="w-full">
-                    <Button 
-                      variant="secondary" 
+                    <Button
+                      variant="secondary"
                       className="w-full rounded-2xl h-12 bg-amber-400 hover:bg-amber-300 text-amber-950 border-none font-bold transition-all shadow-lg hover:shadow-amber-400/20"
                     >
                       <Upload className="mr-2 h-4 w-4" />
                       Submit Bank Slip
                     </Button>
                   </Link>
+                ) : (enrollment.paymentStatus === "PAID" || enrollment.status === "CONFIRMED") ? (
+                  <Link to={`/course/${enrollment.id}`} className="w-full">
+                    <Button
+                      variant="secondary"
+                      className="w-full rounded-2xl h-12 bg-green-500 hover:bg-green-400 text-white border-none font-bold transition-all shadow-lg hover:shadow-green-500/20"
+                    >
+                      <Star className="mr-2 h-4 w-4" />
+                      View Session Details
+                    </Button>
+                  </Link>
                 ) : (
-                  <Button 
-                    disabled 
-                    variant="secondary" 
+                  <Button
+                    disabled
+                    variant="secondary"
                     className="w-full rounded-2xl h-12 bg-white/5 text-white/40 border border-white/5 cursor-not-allowed"
                   >
-                    {(enrollment.status === "PENDING" || enrollment.status === "pending") ? "Awaiting Confirmation" : enrollment.status}
+                    {enrollment.paymentStatus === "PENDING_APPROVAL" ? "Awaiting Admin Approval" : "Awaiting Confirmation"}
                   </Button>
                 )}
               </div>
@@ -237,17 +247,17 @@ export default function DashboardPage() {
             />
           </div>
           <DialogFooter className="mt-8 gap-3 sm:gap-0">
-            <Button 
-                variant="ghost" 
-                onClick={() => setIsReviewModalOpen(false)}
-                className="rounded-xl h-12 font-bold"
+            <Button
+              variant="ghost"
+              onClick={() => setIsReviewModalOpen(false)}
+              className="rounded-xl h-12 font-bold"
             >
-                Later
+              Later
             </Button>
-            <Button 
-                onClick={submitReview} 
-                disabled={submittingReview || !comment}
-                className="rounded-xl h-12 px-8 font-black bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all flex-1 sm:flex-none"
+            <Button
+              onClick={submitReview}
+              disabled={submittingReview || !comment}
+              className="rounded-xl h-12 px-8 font-black bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all flex-1 sm:flex-none"
             >
               {submittingReview ? "Saving..." : "Post Review"}
             </Button>

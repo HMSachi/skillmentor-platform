@@ -1,5 +1,6 @@
 package com.stemlink.skillmentor.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.websocket.*;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name="mentor")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Mentor {
 
     @Id

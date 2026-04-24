@@ -29,6 +29,15 @@ public class Student {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "bio", columnDefinition = "TEXT")
+    private String bio;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Date createdAt;

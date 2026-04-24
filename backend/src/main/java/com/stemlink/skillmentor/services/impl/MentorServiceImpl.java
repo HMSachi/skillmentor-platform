@@ -78,7 +78,16 @@ public class MentorServiceImpl implements MentorService {
             Mentor mentor =  mentorRepository.findById(id).orElseThrow(
                     () -> new SkillMentorException("Mentor not Found", HttpStatus.NOT_FOUND)
             );
-            modelMapper.map(updatedMentor, mentor);
+            
+            if (updatedMentor.getFirstName() != null) mentor.setFirstName(updatedMentor.getFirstName());
+            if (updatedMentor.getLastName() != null) mentor.setLastName(updatedMentor.getLastName());
+            if (updatedMentor.getProfession() != null) mentor.setProfession(updatedMentor.getProfession());
+            if (updatedMentor.getCompany() != null) mentor.setCompany(updatedMentor.getCompany());
+            if (updatedMentor.getBio() != null) mentor.setBio(updatedMentor.getBio());
+            if (updatedMentor.getPhoneNumber() != null) mentor.setPhoneNumber(updatedMentor.getPhoneNumber());
+            if (updatedMentor.getTitle() != null) mentor.setTitle(updatedMentor.getTitle());
+            if (updatedMentor.getProfileImageUrl() != null) mentor.setProfileImageUrl(updatedMentor.getProfileImageUrl());
+            
             return mentorRepository.save(mentor);
 
         } catch(SkillMentorException skillMentorException){
@@ -86,7 +95,6 @@ public class MentorServiceImpl implements MentorService {
             throw  new SkillMentorException("Mentor Not Found", HttpStatus.NOT_FOUND);
 
         }catch (Exception exception){
-            // System.err.printf("Error getting Mentor " +exception.getMessage());
             log.error("Error update  Mentor ", exception);
             throw  new SkillMentorException("Fail to update new mentor", HttpStatus.INTERNAL_SERVER_ERROR);
         }}

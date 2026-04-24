@@ -138,15 +138,24 @@ public class ClerkValidator implements TokenValidator {
             // Get the public key from the JWK
             PublicKey publicKey = jwk.getPublicKey();
 
-            // Create algorithm and verify the token
+            // Create algorithm and verify the token with 60s leeway for clock skew
             Algorithm algorithm = Algorithm.RSA256((java.security.interfaces.RSAPublicKey) publicKey, null);
-            JWT.require(algorithm).build().verify(token);
+            JWT.require(algorithm)
+                .acceptLeeway(60)
+                .build()
+                .verify(token);
 
             log.debug("Token signature verified successfully for kid: {}", kid);
             return true;
 
-        } catch (Exception e) {
+        } catch (com.auth0.jwt.exceptions.TokenExpiredException e) {
+            log.error("Token expired for kid {}: {}", kid, e.getMessage());
+            return false;
+        } catch (com.auth0.jwt.exceptions.SignatureVerificationException e) {
             log.error("Signature verification failed for kid {}: {}", kid, e.getMessage());
+            return false;
+        } catch (Exception e) {
+            log.error("Token verification failed for kid {}: {}. Exception type: {}", kid, e.getMessage(), e.getClass().getName());
             return false;
         }
     }

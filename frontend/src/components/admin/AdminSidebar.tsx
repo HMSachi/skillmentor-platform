@@ -8,6 +8,7 @@ export default function AdminSidebar() {
     { name: "Subjects", href: "/admin/subjects", icon: BookOpen },
     { name: "Sessions", href: "/admin/sessions", icon: Calendar },
     { name: "Students", href: "/admin/students", icon: Users },
+    { name: "Profile", href: "/admin/profile", icon: ShieldCheck },
   ];
 
   return (
@@ -27,10 +28,9 @@ export default function AdminSidebar() {
               to={link.href}
               end={link.href === "/admin"}
               className={({ isActive }) =>
-                `flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
-                  isActive
-                    ? "bg-primary text-white"
-                    : "text-slate-600 hover:bg-slate-100"
+                `flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${isActive
+                  ? "bg-primary text-white"
+                  : "text-slate-600 hover:bg-slate-100"
                 }`
               }
             >

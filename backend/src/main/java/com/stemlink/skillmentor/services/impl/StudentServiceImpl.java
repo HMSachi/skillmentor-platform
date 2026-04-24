@@ -65,4 +65,24 @@ public class StudentServiceImpl implements StudentService {
             return dto;
         }).collect(Collectors.toList());
     }
+
+    @Override
+    public Student getStudentByClerkId(String clerkUserId) {
+        return studentRepository.findByClerkUserId(clerkUserId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Override
+    @Transactional
+    public Student updateStudentProfile(String clerkUserId, String name, String phone, String bio, String profileImageUrl) {
+        Student student = studentRepository.findByClerkUserId(clerkUserId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        if (name != null) student.setName(name);
+        if (phone != null) student.setPhone(phone);
+        if (bio != null) student.setBio(bio);
+        if (profileImageUrl != null) student.setProfileImageUrl(profileImageUrl);
+        
+        return studentRepository.save(student);
+    }
 }

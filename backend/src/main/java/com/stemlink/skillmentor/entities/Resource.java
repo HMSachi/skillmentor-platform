@@ -1,55 +1,44 @@
 package com.stemlink.skillmentor.entities;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
+@Entity
+@Table(name = "resources")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "subjects")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Subject {
+public class Resource {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name = "Subject_name", length = 100)
-    private String subjectName;
+    @Column(nullable = false)
+    private String title;
 
     @Column(nullable = false)
-    private String description;
+    private String fileUrl;
 
-    @Column(name = "course_image_url")
-    private String courseImageUrl;
+    @Column(nullable = false)
+    private String type; // ASSIGNMENT, RESOURCE, VIDEO, etc.
 
-
-    // --------- Relationship -------------
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mentor_id", nullable = false)
-    @JsonIgnore
-    private Mentor mentor;
+    @JoinColumn(name = "subject_id")
+    private Subject subject;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mentor_id")
+    private Mentor mentor;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Date createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private Date updatedAt;
-
 }

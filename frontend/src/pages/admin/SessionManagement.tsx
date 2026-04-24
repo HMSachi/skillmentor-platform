@@ -9,6 +9,7 @@ interface Session {
   sessionAt: string;
   status: string;
   paymentStatus: string;
+  paymentProofUrl?: string;
 }
 
 export default function SessionManagement() {
@@ -94,6 +95,7 @@ export default function SessionManagement() {
                 <td className="px-6 py-4 text-slate-600">{new Date(session.sessionAt).toLocaleString()}</td>
                 <td className="px-6 py-4 text-slate-600">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${session.paymentStatus === 'PAID' ? 'bg-green-100 text-green-700' :
+                    session.paymentStatus === 'PENDING_APPROVAL' ? 'bg-amber-100 text-amber-700' :
                       session.paymentStatus === 'PENDING' ? 'bg-yellow-100 text-yellow-700' :
                         'bg-slate-100 text-slate-700'
                     }`}>
@@ -102,19 +104,31 @@ export default function SessionManagement() {
                 </td>
                 <td className="px-6 py-4 text-slate-600">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${session.status === 'COMPLETED' ? 'bg-blue-100 text-blue-700' :
-                      session.status === 'CANCELLED' ? 'bg-red-100 text-red-700' :
-                        'bg-slate-100 text-slate-700'
+                    session.status === 'CANCELLED' ? 'bg-red-100 text-red-700' :
+                      'bg-slate-100 text-slate-700'
                     }`}>
                     {session.status}
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <div className="flex gap-2">
-                    {session.paymentStatus !== "PAID" && (
-                      <button onClick={() => updatePaymentStatus(session.id, "PAID")} className="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">Approve Payment</button>
-                    )}
-                    {session.status !== "COMPLETED" && session.status !== "CANCELLED" && (
-                      <button onClick={() => updateSessionStatus(session.id, "COMPLETED")} className="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">Mark Complete</button>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex gap-2">
+                      {session.paymentStatus !== "PAID" && (
+                        <button onClick={() => updatePaymentStatus(session.id, "PAID")} className="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">Approve Payment</button>
+                      )}
+                      {session.status !== "COMPLETED" && session.status !== "CANCELLED" && (
+                        <button onClick={() => updateSessionStatus(session.id, "COMPLETED")} className="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">Mark Complete</button>
+                      )}
+                    </div>
+                    {session.paymentProofUrl && (
+                      <a
+                        href={session.paymentProofUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-xs text-blue-600 hover:underline font-medium"
+                      >
+                        View Payment Slip
+                      </a>
                     )}
                   </div>
                 </td>
